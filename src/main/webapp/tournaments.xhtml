@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core">
+      d
 <h:head/>
 <h:body>
     <h2>Tournaments (JPA):</h2>
@@ -17,12 +15,13 @@
                     </ui:repeat>
                 </ul>
                 <h:form>
-                    <h:selectOneMenu value="#{tournaments.selectedPlayerId}">
-                        <f:selectItems value="#{tournaments.allPlayers}" var="p"
-                                       itemValue="#{p.id}" itemLabel="#{p.name}" />
-                    </h:selectOneMenu>
-                    <h:commandButton value="Add player"
-                                     action="#{tournaments.addPlayerToTournament(tournament.id)}" />
+                    <input type="hidden" name="tournamentId" value="#{tournament.id}" />
+                    <select name="playerId">
+                        <ui:repeat value="#{tournaments.allPlayers}" var="p">
+                            <option value="#{p.id}">#{p.name}</option>
+                        </ui:repeat>
+                    </select>
+                    <h:commandButton value="Add player" action="#{tournaments.addPlayerToTournament()}" />
                 </h:form>
             </li>
         </ui:repeat>

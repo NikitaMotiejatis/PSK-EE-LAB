@@ -9,6 +9,7 @@ import lt.vu.persistence.TournamentsDAO;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -31,9 +32,6 @@ public class Tournaments {
     @Getter
     private List<Player> allPlayers;
 
-    @Getter @Setter
-    private Integer selectedPlayerId;
-
     @PostConstruct
     public void init() {
         loadAllTournaments();
@@ -47,11 +45,19 @@ public class Tournaments {
     }
 
     @Transactional
-    public String addPlayerToTournament(Integer tournamentId) {
+    public String addPlayerToTournament() {
+        String tournamentIdParam = FacesContext.getCurrentInstance()
+                .getExternalContext().getRequestParameterMap().get("tournamentId");
+        String playerIdParam = FacesContext.getCurrentInstance()
+                .getExternalContext().getRequestParameterMap().get("playerId");
+        Integer tournamentId = Integer.valueOf(tournamentIdParam);
+        Integer playerId = Integer.valueOf(playerIdParam);
         Tournament tournament = tournamentsDAO.findOne(tournamentId);
-        Player player = playersDAO.findOne(selectedPlayerId);
-        tournament.getPlayers().add(player);
-        tournamentsDAO.update(tournament);
+        Player player = playersDAO.findOne(playerId);
+        if (!tournament.getPlayers().contains(player)) {
+            tournament.getPlayers().add(player);
+            tournamentsDAO.update(tournament);
+        }
         return "tournaments?faces-redirect=true";
     }
 

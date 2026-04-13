@@ -9,6 +9,7 @@ import lt.vu.mybatis.model.Tournament;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -31,9 +32,6 @@ public class TournamentsMyBatis {
     @Getter @Setter
     private Tournament tournamentToCreate = new Tournament();
 
-    @Getter @Setter
-    private Integer selectedPlayerId;
-
     @PostConstruct
     public void init() {
         loadAllTournaments();
@@ -51,8 +49,19 @@ public class TournamentsMyBatis {
     }
 
     @Transactional
-    public String addPlayerToTournament(Integer tournamentId) {
-        tournamentMapper.insertPlayerTournament(tournamentId, selectedPlayerId);
+    public String addPlayerToTournament() {
+        String tournamentIdParam = FacesContext.getCurrentInstance()
+                .getExternalContext().getRequestParameterMap().get("tournamentId");
+        String playerIdParam = FacesContext.getCurrentInstance()
+                .getExternalContext().getRequestParameterMap().get("playerId");
+        Integer tournamentId = Integer.valueOf(tournamentIdParam);
+        Integer playerId = Integer.valueOf(playerIdParam);
+        Tournament tournament = tournamentMapper.selectByPrimaryKey(tournamentId);
+        boolean alreadyAdded = tournament.getPlayers().stream()
+                .anyMatch(p -> p.getId().equals(playerId));
+        if (!alreadyAdded) {
+            tournamentMapper.insertPlayerTournament(tournamentId, playerId);
+        }
         return "/myBatis/tournaments?faces-redirect=true";
     }
 }

@@ -17,12 +17,13 @@
                     </ui:repeat>
                 </ul>
                 <h:form>
-                    <h:selectOneMenu value="#{tournamentsMyBatis.selectedPlayerId}">
-                        <f:selectItems value="#{tournamentsMyBatis.allPlayers}" var="p"
-                                       itemValue="#{p.id}" itemLabel="#{p.name}" />
-                    </h:selectOneMenu>
-                    <h:commandButton value="Add player"
-                                     action="#{tournamentsMyBatis.addPlayerToTournament(tournament.id)}" />
+                    <input type="hidden" name="tournamentId" value="#{tournament.id}" />
+                    <select name="playerId">
+                        <ui:repeat value="#{tournamentsMyBatis.allPlayers}" var="p">
+                            <option value="#{p.id}">#{p.name}</option>
+                        </ui:repeat>
+                    </select>
+                    <h:commandButton value="Add player" action="#{tournamentsMyBatis.addPlayerToTournament()}" />
                 </h:form>
             </li>
         </ui:repeat>

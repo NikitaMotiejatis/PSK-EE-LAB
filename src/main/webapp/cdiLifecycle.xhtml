@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>CDI Scope Lifecycle Demo</title>
+</h:head>
+<h:body>
+    <h2>CDI Scope Lifecycle Demo</h2>
+
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>Scope</th>
+            <th>Instance ID</th>
+            <th>Count</th>
+            <th>Action</th>
+            <th>Behavior</th>
+        </tr>
+        <tr>
+            <td><strong>@RequestScoped</strong></td>
+            <td>#{requestScopedCounter.instanceId}</td>
+            <td>#{requestScopedCounter.count}</td>
+            <td>
+                <h:form>
+                    <h:commandButton value="Increment"
+                                     actionListener="#{requestScopedCounter.increment}"
+                                     action="cdiLifecycle?faces-redirect=true" />
+                </h:form>
+            </td>
+            <td>New instance every request. Count always resets to 0. Instance ID changes each time.</td>
+        </tr>
+        <tr>
+            <td><strong>@SessionScoped</strong></td>
+            <td>#{sessionScopedCounter.instanceId}</td>
+            <td>#{sessionScopedCounter.count}</td>
+            <td>
+                <h:form>
+                    <h:commandButton value="Increment"
+                                     actionListener="#{sessionScopedCounter.increment}"
+                                     action="cdiLifecycle?faces-redirect=true" />
+                </h:form>
+            </td>
+            <td>Same instance for your browser session. Count persists across requests. Try a different browser — separate count.</td>
+        </tr>
+        <tr>
+            <td><strong>@ApplicationScoped</strong></td>
+            <td>#{applicationScopedCounter.instanceId}</td>
+            <td>#{applicationScopedCounter.count}</td>
+            <td>
+                <h:form>
+                    <h:commandButton value="Increment"
+                                     actionListener="#{applicationScopedCounter.increment}"
+                                     action="cdiLifecycle?faces-redirect=true" />
+                </h:form>
+            </td>
+            <td>Single instance for the entire application. Count persists across all users/sessions. Same instance ID everywhere.</td>
+        </tr>
+    </table>
+
+
+    <br/>
+    <h:link outcome="index" value="Back to main page" />
+</h:body>
+</html>
