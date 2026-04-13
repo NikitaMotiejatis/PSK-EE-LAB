@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lt.vu.mybatis.dao.TournamentMapper">
+  <resultMap id="BaseResultMap" type="lt.vu.mybatis.model.Tournament">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <collection property="players" ofType="lt.vu.mybatis.model.Player">
+      <id column="PLAYER_ID" jdbcType="INTEGER" property="id" />
+      <result column="PLAYER_NAME" jdbcType="VARCHAR" property="name" />
+      <result column="PLAYER_TEAM_ID" jdbcType="INTEGER" property="teamId" />
+    </collection>
+  </resultMap>
+
+  <resultMap id="SimpleResultMap" type="lt.vu.mybatis.model.Tournament">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+
+  <select id="selectAll" resultMap="SimpleResultMap">
+    select ID, NAME
+    from PUBLIC.TOURNAMENT
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select t.ID, t.NAME,
+           p.ID as PLAYER_ID, p.NAME as PLAYER_NAME, p.TEAM_ID as PLAYER_TEAM_ID
+    from PUBLIC.TOURNAMENT t
+    left join PUBLIC.PLAYER_TOURNAMENT pt on t.ID = pt.TOURNAMENT_ID
+    left join PUBLIC.PLAYER p on pt.PLAYER_ID = p.ID
+    where t.ID = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="lt.vu.mybatis.model.Tournament" useGeneratedKeys="true">
+    insert into PUBLIC.TOURNAMENT (NAME)
+    values (#{name,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertPlayerTournament">
+    insert into PUBLIC.PLAYER_TOURNAMENT (TOURNAMENT_ID, PLAYER_ID)
+    values (#{tournamentId,jdbcType=INTEGER}, #{playerId,jdbcType=INTEGER})
+  </insert>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from PUBLIC.TOURNAMENT
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterType="lt.vu.mybatis.model.Tournament">
+    update PUBLIC.TOURNAMENT
+    set NAME = #{name,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

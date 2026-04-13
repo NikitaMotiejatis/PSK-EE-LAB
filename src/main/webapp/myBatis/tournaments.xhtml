@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head/>
+<h:body>
+    <h2>Tournaments (MyBatis):</h2>
+    <ul>
+        <ui:repeat value="#{tournamentsMyBatis.allTournaments}" var="tournament">
+            <li>
+                <strong>#{tournament.name}</strong>
+                <h:form>
+                    <h:selectOneMenu value="#{tournamentsMyBatis.selectedPlayerId}">
+                        <f:selectItems value="#{tournamentsMyBatis.allPlayers}" var="p"
+                                       itemValue="#{p.id}" itemLabel="#{p.name}" />
+                    </h:selectOneMenu>
+                    <h:commandButton value="Add player"
+                                     action="#{tournamentsMyBatis.addPlayerToTournament(tournament.id)}" />
+                </h:form>
+            </li>
+        </ui:repeat>
+    </ul>
+
+    <h3>Create new tournament:</h3>
+    <h:form>
+        <h:inputText value="#{tournamentsMyBatis.tournamentToCreate.name}" required="true" />
+        <h:commandButton value="Create tournament" action="#{tournamentsMyBatis.createTournament()}" />
+    </h:form>
+
+    <br/>
+    <h:link outcome="/tournaments" value="JPA implementation" />
+    <br/>
+    <h:link outcome="/index" value="Back to main page" />
+</h:body>
+</html>

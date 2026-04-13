@@ -24,5 +24,9 @@
         <h:commandButton value="Add new team" actionListener="#{teams.createTeam}" action="index?faces-redirect=true"/>
     </h:form>
     <h:link outcome="myBatis/teams" value="MyBatis implementation"/>
+    <br/>
+    <h:link outcome="tournaments" value="Tournaments (JPA - ManyToMany)"/>
+    <br/>
+    <h:link outcome="myBatis/tournaments" value="Tournaments (MyBatis - ManyToMany)"/>
 </h:body>
 </html>
