@@ -11,6 +11,11 @@
         <ui:repeat value="#{tournamentsMyBatis.allTournaments}" var="tournament">
             <li>
                 <strong>#{tournament.name}</strong>
+                <ul>
+                    <ui:repeat value="#{tournament.players}" var="player">
+                        <li>#{player.name}</li>
+                    </ui:repeat>
+                </ul>
                 <h:form>
                     <h:selectOneMenu value="#{tournamentsMyBatis.selectedPlayerId}">
                         <f:selectItems value="#{tournamentsMyBatis.allPlayers}" var="p"
