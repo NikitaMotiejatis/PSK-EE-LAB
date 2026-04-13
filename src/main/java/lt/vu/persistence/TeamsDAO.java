@@ -13,6 +13,13 @@ public class TeamsDAO {
     @Inject
     private EntityManager em;
 
+    public List<Team> findByNameLike(String fragment) {
+        return em.createQuery(
+                        "select t from Team t where t.name LIKE :fragment", Team.class)
+                .setParameter("fragment", "%" + fragment + "%")
+                .getResultList();
+    }
+
     public List<Team> loadAll() {
         return em.createNamedQuery("Team.findAll", Team.class).getResultList();
     }

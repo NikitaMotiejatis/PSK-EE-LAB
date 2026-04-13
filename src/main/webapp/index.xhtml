@@ -6,6 +6,13 @@
 >
 <h:head/>
 <h:body>
+    <h:outputText value="#{pirmasKomponentas.sakykLabas()}"/>
+    <h:outputText value="#{pirmasKomponentas.class.name}"/>
+
+    <h:form>
+        <h:commandButton value="Test transactions" action="#{transakcijaPirmas.doWork()}"/>
+    </h:form>
+
     <h2>Teams:</h2>
     <ol>
         <ui:repeat value="#{teams.allTeams}" var="team">
