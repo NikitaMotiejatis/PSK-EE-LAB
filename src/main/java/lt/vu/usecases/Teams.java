@@ -33,6 +33,10 @@ public class Teams {
         this.teamsDAO.persist(teamToCreate);
     }
 
+    public int getPlayerCount(Team team) {
+        return team.getPlayers().size();
+    }
+
     private void loadAllTeams(){
         this.allTeams = teamsDAO.loadAll();
     }

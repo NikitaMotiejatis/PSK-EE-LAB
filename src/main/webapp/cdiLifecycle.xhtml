@@ -27,7 +27,7 @@
                                      action="cdiLifecycle?faces-redirect=true" />
                 </h:form>
             </td>
-            <td>New instance every request. Count always resets to 0. Instance ID changes each time.</td>
+            <td>New instance every request.</td>
         </tr>
         <tr>
             <td><strong>@SessionScoped</strong></td>
@@ -40,7 +40,7 @@
                                      action="cdiLifecycle?faces-redirect=true" />
                 </h:form>
             </td>
-            <td>Same instance for your browser session. Count persists across requests. Try a different browser — separate count.</td>
+            <td>Same instance for browser session.</td>
         </tr>
         <tr>
             <td><strong>@ApplicationScoped</strong></td>
@@ -53,7 +53,7 @@
                                      action="cdiLifecycle?faces-redirect=true" />
                 </h:form>
             </td>
-            <td>Single instance for the entire application. Count persists across all users/sessions. Same instance ID everywhere.</td>
+            <td>Single instance for the entire application. Same instance ID everywhere.</td>
         </tr>
     </table>
 

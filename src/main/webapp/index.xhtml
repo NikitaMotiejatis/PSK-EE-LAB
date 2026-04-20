@@ -16,7 +16,8 @@
     <h2>Teams:</h2>
     <ol>
         <ui:repeat value="#{teams.allTeams}" var="team">
-            <li><h:link value="#{team.name}" outcome="players?teamId=#{team.id}" /></li>
+            <li><h:link value="#{team.name}" outcome="players?teamId=#{team.id}" />
+            (#{teams.getPlayerCount(team)} players)</li>
         </ui:repeat>
     </ol>
     <h:form>
