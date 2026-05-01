@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+    <title>Async demo</title>
+</h:head>
+<h:body>
+    <h2>Asynchronous communication</h2>
+
+    <h3>Long computation only (existing example)</h3>
+    <p>See <code>JerseyNumberGenerator</code> + <code>GeneratePlayerJerseyNumber</code>.
+       <code>CompletableFuture.supplyAsync</code> launches a 3-second sleep on the ForkJoinPool.
+       The UI polls <code>isJerseyGenerationRunning</code> / <code>jerseyGenerationStatus</code> while the user keeps interacting.</p>
+
+    <h3>Async + DB write (this page)</h3>
+    <p>Press the button. The async worker sleeps 2 s, then opens its OWN <code>EntityManager</code>
+       and its OWN <code>UserTransaction</code>. Refresh the page to see the result update.</p>
+    <h:form>
+        <h:commandButton value="Start async DB work" action="#{asyncDbWorkDemo.start()}"/>
+    </h:form>
+    <h:form>
+        <p>Status: <b>#{asyncDbWorkDemo.status}</b></p>
+        <h:commandButton value="Refresh status">
+            <f:ajax render="@form"/>
+        </h:commandButton>
+    </h:form>
+
+    <h3>Lab questions</h3>
+    <ul>
+        <li><b>(a) Can the async component join the caller's transaction?</b>
+            <span> No. JTA transactions are bound to the calling thread. When the caller's request
+            ends, its transaction commits or rolls back independently of the async worker.
+            The async component must start its own transaction (or run transactionless).</span>
+        </li>
+        <li><b>(b) Can the async component use a @RequestScoped EntityManager?</b>
+            <span> No. @RequestScoped is bound to the HTTP request that started the chain. By the time
+            (or thread on which) the async work runs, the request scope is not active.
+            Accessing such an EM throws ContextNotActiveException. Use
+            <code>EntityManagerFactory.createEntityManager()</code> + <code>UserTransaction</code>,
+            or use <code>@PersistenceContext</code> on a stateless EJB / @ApplicationScoped bean
+            with manual transaction control (as <code>AsyncDbWorker</code> does).</span>
+        </li>
+    </ul>
+
+    <h:link outcome="index" value="Back to home page"/>
+</h:body>
+</html>

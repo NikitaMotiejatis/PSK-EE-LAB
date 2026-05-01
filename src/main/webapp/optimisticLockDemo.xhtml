@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Optimistic locking demo</title>
+</h:head>
+<h:body>
+    <h2>Optimistic locking demo</h2>
+    <p>
+        Simulates: User B loads a player, User A commits an update, then User B tries to save its stale snapshot.
+        The merge throws OptimisticLockException; the demo then performs proper recovery in a fresh transaction.
+    </p>
+
+    <h:form>
+        <h:commandButton value="Run demo" action="#{optimisticLockingDemo.run()}"/>
+    </h:form>
+
+    <h3>Log</h3>
+    <pre>#{optimisticLockingDemo.log}</pre>
+
+    <h3>Lab questions</h3>
+    <ul>
+        <li><b>(a) What happens to the current transaction when an OLE is thrown?</b>
+            The JTA transaction is marked for rollback (Status.STATUS_MARKED_ROLLBACK).
+            It cannot be committed; the container will roll it back when the @Transactional method exits.
+        </li>
+        <li><b>(b) What happens to the current EntityManager? How do you save after an OLE?</b>
+            The persistence context is in an undefined state and should not be reused.
+            To save the entity, get a fresh EntityManager (or call em.clear() on a request-scoped one),
+            start a new transaction, re-fetch the entity (its version will match the DB),
+            re-apply the user's intended change, then commit.
+        </li>
+    </ul>
+
+    <h:link outcome="index" value="Back to home page"/>
+</h:body>
+</html>

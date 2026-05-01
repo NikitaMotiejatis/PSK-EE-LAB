@@ -11,4 +11,6 @@ public class PlayerDto {
     private Integer JerseyNumber;
 
     private String TeamName;
+
+    private Integer TeamId;
 }
