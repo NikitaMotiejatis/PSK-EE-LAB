@@ -8,6 +8,12 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+/**
+ * Each step runs in its own JTA transaction (REQUIRES_NEW) so the demo
+ * can simulate two users. Names are SET to short fixed strings so the
+ * @Size(max=50) constraint on Player.name never trips — we want the
+ * OptimisticLockException to be the cause of failure, not bean validation.
+ */
 @ApplicationScoped
 public class OptimisticLockingService {
 
@@ -36,24 +42,24 @@ public class OptimisticLockingService {
     public Player otherUserCommits(Integer playerId) {
         em.clear();
         Player p = em.find(Player.class, playerId);
-        p.setName(p.getName() + " [other-user]");
+        p.setName("OL-A");
         em.flush();
         return p;
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void attemptStaleUpdate(Player staleSnapshot, String suffix) {
+    public void attemptStaleUpdate(Player staleSnapshot) {
         em.clear();
-        staleSnapshot.setName(staleSnapshot.getName() + suffix);
+        staleSnapshot.setName("OL-B-stale");
         em.merge(staleSnapshot);
         em.flush();
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public Player recover(Integer playerId, String suffix) {
+    public Player recover(Integer playerId) {
         em.clear();
         Player fresh = em.find(Player.class, playerId);
-        fresh.setName(fresh.getName() + suffix);
+        fresh.setName("OL-B-recovered");
         em.flush();
         return fresh;
     }

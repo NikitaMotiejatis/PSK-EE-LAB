@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalTime;
 
 @Named
 @RequestScoped
@@ -22,6 +23,8 @@ public class ExtensibilityDemo implements Serializable {
 
     @Inject
     private MessageService messageService;
+
+    private String interceptorMessage = "(not yet run)";
 
     public String getGreetingResult() {
         return greeting.greet("studentas") + "  (impl: " + greeting.getClass().getSimpleName() + ")";
@@ -39,6 +42,8 @@ public class ExtensibilityDemo implements Serializable {
 
     @LoggedInvocation
     public String runInterceptedAction() {
-        return "intercepted action ran (check WildFly console for 'Called method: runInterceptedAction')";
+        interceptorMessage = "intercepted action ran at " + LocalTime.now()
+                + " (check the WildFly console for 'Called method: runInterceptedAction')";
+        return null;
     }
 }

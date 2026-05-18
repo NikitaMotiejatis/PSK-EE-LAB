@@ -33,21 +33,21 @@ public class OptimisticLockingDemo implements Serializable {
                 snapshot.getName(), snapshot.getVersion()));
 
         Player afterA = service.otherUserCommits(playerId);
-        out.append(String.format("[Step 2] User A committed an update. DB version is now %d%n",
-                afterA.getVersion()));
+        out.append(String.format("[Step 2] User A committed. DB now: name='%s', version=%d%n",
+                afterA.getName(), afterA.getVersion()));
 
-        out.append(String.format("[Step 3] User B tries to merge stale snapshot (version=%d while DB=%d)%n",
+        out.append(String.format("[Step 3] User B tries to merge stale snapshot (snapshot.version=%d, DB.version=%d)%n",
                 snapshot.getVersion(), afterA.getVersion()));
         try {
-            service.attemptStaleUpdate(snapshot, " [B-stale]");
-            out.append("Unexpected: no OptimisticLockException was thrown.\n");
+            service.attemptStaleUpdate(snapshot);
+            out.append("        Unexpected: no OptimisticLockException was thrown.\n");
         } catch (Exception e) {
             out.append(String.format("        Caught: %s%n", rootCause(e)));
             out.append("        -> JTA tx was marked for rollback; persistence context is invalid.\n");
             out.append("        -> Recovery requires a NEW transaction and a clean EM state.\n");
         }
 
-        Player recovered = service.recover(playerId, " [B-recovered]");
+        Player recovered = service.recover(playerId);
         out.append(String.format("[Step 4] Recovery committed. Final: name='%s', version=%d%n",
                 recovered.getName(), recovered.getVersion()));
 

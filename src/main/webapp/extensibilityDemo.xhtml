@@ -33,6 +33,7 @@
     <h:form>
         <h:commandButton value="Run intercepted action" action="#{extensibilityDemo.runInterceptedAction()}"/>
     </h:form>
+    <p>Result: <b>#{extensibilityDemo.interceptorMessage}</b></p>
     <p>Watch the WildFly console for: <code>Called method: runInterceptedAction</code>.</p>
 
     <h3>3d. @Decorator</h3>
