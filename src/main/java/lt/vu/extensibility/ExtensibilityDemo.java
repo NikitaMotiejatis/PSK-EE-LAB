@@ -42,8 +42,7 @@ public class ExtensibilityDemo implements Serializable {
 
     @LoggedInvocation
     public String runInterceptedAction() {
-        interceptorMessage = "intercepted action ran at " + LocalTime.now()
-                + " (check the WildFly console for 'Called method: runInterceptedAction')";
+        interceptorMessage = "intercepted action ran at " + LocalTime.now();
         return null;
     }
 }

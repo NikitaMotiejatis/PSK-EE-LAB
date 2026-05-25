@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RESTful API Demo</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 2em auto; }
+        fieldset { margin-bottom: 1.5em; padding: 1em; }
+        label { display: inline-block; width: 110px; }
+        input { margin-bottom: 0.4em; }
+        button { margin-top: 0.5em; }
+        pre { background: #f4f4f4; padding: 1em; white-space: pre-wrap; word-break: break-all; min-height: 2em; }
+        .status { font-weight: bold; }
+        .ok { color: green; }
+        .err { color: red; }
+    </style>
+</head>
+<body>
+<h2>RESTful API Demo — Players</h2>
+<p><a href="index.xhtml">Back to home page</a></p>
+
+<fieldset>
+    <legend>GET /api/players/{id}</legend>
+    <label for="getId">Player ID:</label>
+    <input id="getId" type="number" value="1" min="1">
+    <br>
+    <button onclick="doGet()">Send GET</button>
+    <pre id="getResult"></pre>
+</fieldset>
+
+<fieldset>
+    <legend>POST /api/players</legend>
+    <label for="postName">Name:</label>
+    <input id="postName" type="text" value="Jonas"><br>
+    <label for="postJersey">Jersey #:</label>
+    <input id="postJersey" type="number" value="7"><br>
+    <label for="postTeamId">Team ID:</label>
+    <input id="postTeamId" type="number" value="1" min="1"><br>
+    <button onclick="doPost()">Send POST</button>
+    <pre id="postResult"></pre>
+</fieldset>
+
+<fieldset>
+    <legend>PUT /api/players/{id}</legend>
+    <label for="putId">Player ID:</label>
+    <input id="putId" type="number" value="1" min="1"><br>
+    <label for="putName">New Name:</label>
+    <input id="putName" type="text" value="Petras"><br>
+    <label for="putJersey">New Jersey #:</label>
+    <input id="putJersey" type="number" value="10"><br>
+    <button onclick="doPut()">Send PUT</button>
+    <pre id="putResult"></pre>
+</fieldset>
+
+<script>
+    var BASE = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/api/players';
+
+    function showResult(el, status, body) {
+        var cls = status >= 200 && status < 300 ? 'ok' : 'err';
+        el.innerHTML = '<span class="status ' + cls + '">HTTP ' + status + '</span>\n' + body;
+    }
+
+    function doGet() {
+        var id = document.getElementById('getId').value;
+        var out = document.getElementById('getResult');
+        out.textContent = 'Loading...';
+
+        fetch(BASE + '/' + id)
+            .then(function (res) {
+                return res.text().then(function (text) {
+                    try { text = JSON.stringify(JSON.parse(text), null, 2); } catch (e) {}
+                    showResult(out, res.status, text);
+                });
+            })
+            .catch(function (err) { out.textContent = 'Error: ' + err; });
+    }
+
+    function doPost() {
+        var body = {
+            name: document.getElementById('postName').value,
+            jerseyNumber: parseInt(document.getElementById('postJersey').value),
+            teamId: parseInt(document.getElementById('postTeamId').value)
+        };
+        var out = document.getElementById('postResult');
+        out.textContent = 'Loading...';
+
+        fetch(BASE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+            .then(function (res) {
+                return res.text().then(function (text) {
+                    var locationHeader = res.headers.get('Location');
+                    var extra = locationHeader ? 'Location: ' + locationHeader + '\n' : '';
+                    try { text = JSON.stringify(JSON.parse(text), null, 2); } catch (e) {}
+                    showResult(out, res.status, extra + text);
+                });
+            })
+            .catch(function (err) { out.textContent = 'Error: ' + err; });
+    }
+
+    function doPut() {
+        var id = document.getElementById('putId').value;
+        var body = {
+            name: document.getElementById('putName').value,
+            jerseyNumber: parseInt(document.getElementById('putJersey').value)
+        };
+        var out = document.getElementById('putResult');
+        out.textContent = 'Loading...';
+
+        fetch(BASE + '/' + id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+            .then(function (res) {
+                return res.text().then(function (text) {
+                    if (!text) text = '(empty body)';
+                    showResult(out, res.status, text);
+                });
+            })
+            .catch(function (err) { out.textContent = 'Error: ' + err; });
+    }
+</script>
+</body>
+</html>
