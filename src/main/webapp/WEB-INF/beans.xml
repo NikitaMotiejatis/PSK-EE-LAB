@@ -6,17 +6,14 @@
                       http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
         bean-discovery-mode="annotated">
 
-    <!-- Interceptors: comment out to disable globally -->
     <interceptors>
         <class>lt.vu.interceptors.MethodLogger</class>
     </interceptors>
 
-    <!-- Alternatives: comment out to fall back to EnglishGreeting -->
     <alternatives>
         <class>lt.vu.extensibility.LithuanianGreeting</class>
     </alternatives>
 
-    <!-- Decorators: comment out to disable AuditingMessageDecorator -->
     <decorators>
         <class>lt.vu.extensibility.AuditingMessageDecorator</class>
     </decorators>
