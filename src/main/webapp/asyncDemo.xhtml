@@ -26,23 +26,6 @@
         </h:commandButton>
     </h:form>
 
-    <h3>Lab questions</h3>
-    <ul>
-        <li><b>(a) Can the async component join the caller's transaction?</b>
-            <span> No. JTA transactions are bound to the calling thread. When the caller's request
-            ends, its transaction commits or rolls back independently of the async worker.
-            The async component must start its own transaction (or run transactionless).</span>
-        </li>
-        <li><b>(b) Can the async component use a @RequestScoped EntityManager?</b>
-            <span> No. @RequestScoped is bound to the HTTP request that started the chain. By the time
-            (or thread on which) the async work runs, the request scope is not active.
-            Accessing such an EM throws ContextNotActiveException. Use
-            <code>EntityManagerFactory.createEntityManager()</code> + <code>UserTransaction</code>,
-            or use <code>@PersistenceContext</code> on a stateless EJB / @ApplicationScoped bean
-            with manual transaction control (as <code>AsyncDbWorker</code> does).</span>
-        </li>
-    </ul>
-
     <h:link outcome="index" value="Back to home page"/>
 </h:body>
 </html>

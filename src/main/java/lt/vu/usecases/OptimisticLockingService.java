@@ -8,12 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-/**
- * Each step runs in its own JTA transaction (REQUIRES_NEW) so the demo
- * can simulate two users. Names are SET to short fixed strings so the
- * @Size(max=50) constraint on Player.name never trips — we want the
- * OptimisticLockException to be the cause of failure, not bean validation.
- */
+// Each step runs in its own JTA transaction (REQUIRES_NEW) so the demo can simulate two users.
 @ApplicationScoped
 public class OptimisticLockingService {
 

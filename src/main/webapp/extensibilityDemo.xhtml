@@ -10,16 +10,15 @@
     <h3>3a. @Alternative</h3>
     <p>Two implementations of <code>Greeting</code>: <code>EnglishGreeting</code> (default) and
        <code>LithuanianGreeting</code> (annotated <code>@Alternative</code>).
-       The active one is selected in <code>beans.xml</code>:</p>
+    </p>
     <pre>&lt;alternatives&gt;
     &lt;class&gt;lt.vu.extensibility.LithuanianGreeting&lt;/class&gt;
 &lt;/alternatives&gt;</pre>
-    <p>Comment that block out and the English implementation is used.</p>
     <p>Result: <b>#{extensibilityDemo.greetingResult}</b></p>
 
     <h3>3b. @Specializes</h3>
     <p><code>DiscountedPriceCalculator</code> extends <code>PriceCalculator</code> and is annotated
-       <code>@Specializes</code>. It replaces the parent transparently — no <code>beans.xml</code> entry needed.
+       <code>@Specializes</code>.
        Anyone injecting <code>PriceCalculator</code> now receives the discounted version.</p>
     <p>Result: <b>#{extensibilityDemo.priceResult}</b></p>
 
@@ -29,12 +28,11 @@
     <pre>&lt;interceptors&gt;
     &lt;class&gt;lt.vu.interceptors.MethodLogger&lt;/class&gt;
 &lt;/interceptors&gt;</pre>
-    <p>Comment that out and the interceptor stops running, with no code changes.</p>
     <h:form>
         <h:commandButton value="Run intercepted action" action="#{extensibilityDemo.runInterceptedAction()}"/>
     </h:form>
     <p>Result: <b>#{extensibilityDemo.interceptorMessage}</b></p>
-    <p>Watch the WildFly console for: <code>Called method: runInterceptedAction</code>.</p>
+    <p>Console: <code>Called method: runInterceptedAction</code>.</p>
 
     <h3>3d. @Decorator</h3>
     <p><code>AuditingMessageDecorator</code> wraps <code>MessageService</code> with a <code>@Delegate</code> field,
@@ -42,7 +40,6 @@
     <pre>&lt;decorators&gt;
     &lt;class&gt;lt.vu.extensibility.AuditingMessageDecorator&lt;/class&gt;
 &lt;/decorators&gt;</pre>
-    <p>Comment that out and the call goes straight to <code>BasicMessageService</code>.</p>
     <p>Result: <b>#{extensibilityDemo.messageResult}</b></p>
 
     <h:link outcome="index" value="Back to home page"/>

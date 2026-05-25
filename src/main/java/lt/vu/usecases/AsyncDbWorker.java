@@ -10,23 +10,6 @@ import javax.persistence.SynchronizationType;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
-/**
- * Demonstrates async-friendly DB access.
- *
- * Why @Resource UserTransaction would NOT work here:
- *   This bean is lazily created the first time it's touched, and that
- *   first touch happens on a CompletableFuture worker thread (ForkJoinPool).
- *   Worker threads have no java:comp/ JNDI namespace, so injection of
- *   @Resource UserTransaction fails with NameNotFoundException.
- *
- * Fix: look up the global java:jboss/UserTransaction inside the method.
- * Global JNDI names work from any thread.
- *
- * Same reason we use @PersistenceUnit (EntityManagerFactory) and create
- * our own EM here, instead of injecting the @RequestScoped EM produced
- * by lt.vu.persistence.Resources — the request scope is not active on
- * the worker thread.
- */
 @ApplicationScoped
 public class AsyncDbWorker {
 
